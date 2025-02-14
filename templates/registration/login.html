@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>Login form</h2>
+<form method="post" action="">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="form-check mb-3">
+        <input type="checkbox" class="form-check-input" id="remember-me" name="remember_me">
+        <label class="form-check-label" for="remember-me">Remember me</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
+<p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+{% endblock %}
