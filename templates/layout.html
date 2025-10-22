@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en"data-bs-theme="dark">
+<html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,13 +10,60 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <style>
+
+      
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+      .navbar {
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      }
+      .form-control:focus {
+        box-shadow: none;
+        border-color: #0d6efd;
+      }
+      .search-results {
+        position: absolute;
+        background-color: #212529;
+        border: 1px solid #444;
+        width: 250px;
+        border-radius: 5px;
+        z-index: 1000;
+      }
+      .search-results li {
+        list-style: none;
+        padding: 8px 12px;
+        cursor: pointer;
+      }
+      .search-results li:hover {
+        background-color: #343a40;
+      }
+      footer {
+        text-align: center;
+        padding: 20px;
+        margin-top: 40px;
+        color: #aaa;
+        border-top: 1px solid #333;
+      }
+    </style>
+
     <title>{% block title %}ChaiHeadq{% endblock %}</title>
   </head>
-  <body >
+
+  <body>
     <header>
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">Tweetbar</a>
+          <a class="navbar-brand fw-bold text-primary" href="{% url 'tweet_list' %}">
+            Tweetbar
+          </a>
           <button
             class="navbar-toggler"
             type="button"
@@ -28,58 +75,38 @@
           >
             <span class="navbar-toggler-icon"></span>
           </button>
+
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Dropdown
+                <a class="nav-link active" aria-current="page" href="{% url 'tweet_list' %}">
+                  Home
                 </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li><hr class="dropdown-divider" /></li>
-                  <li>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
               </li>
             </ul>
-            <form class="d-flex" role="search">
+
+            <!-- Modern Search -->
+            <div class="position-relative me-3">
               <input
-                class="form-control me-2"
+                id="searchInput"
+                class="form-control"
                 type="search"
-                placeholder="Search"
+                placeholder="Search user..."
                 aria-label="Search"
+                autocomplete="off"
               />
-              <button class="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </form>
-            <a href="" class="btn btn-primary">Tweet Home</a>
+              <ul id="searchResults" class="search-results d-none"></ul>
+            </div>
+
             {% if user.is_authenticated %}
-            <form  method="POST" action="{% url 'logout'%}">
-              {%csrf_token%}
-              <button class="btn btn-primary">Logout</button>
-            </form>
-            {%else%}
-            <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
-            <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
-            {%endif%}
+              <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button class="btn btn-outline-light me-2">Logout</button>
+              </form>
+            {% else %}
+              <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Login</a>
+              <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
+            {% endif %}
           </div>
         </div>
       </nav>
@@ -87,20 +114,45 @@
 
     <main>
       {% if messages %}
-        <div class="messages">
+        <div class="container mt-3">
           {% for message in messages %}
-            <div class="message {{ message.tags }}">
-              {{ message }}
-            </div>
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
           {% endfor %}
         </div>
       {% endif %}
 
-      <div class="container">{% block content %} {% endblock %}</div>
+      <div class="container mt-4">{% block content %}{% endblock %}</div>
     </main>
 
     <footer>
-      <!-- Add your footer content here -->
+      <p>© 2025 Tweet Model — Built with ❤️ using Django</p>
     </footer>
+
+    <script>
+      // Example JS for fake search (you can later link it with Django view)
+      const searchInput = document.getElementById("searchInput");
+      const searchResults = document.getElementById("searchResults");
+
+      const users = ["virat_kohli", "cristiano", "elonmusk", "paras_bista", "django_dev"];
+
+      searchInput.addEventListener("input", function () {
+        const query = this.value.toLowerCase();
+        searchResults.innerHTML = "";
+        if (query.length > 0) {
+          const filtered = users.filter((u) => u.includes(query));
+          filtered.forEach((user) => {
+            const li = document.createElement("li");
+            li.textContent = user;
+            li.onclick = () => {
+              window.location.href = `/profile/${user}/`;
+            };
+            searchResults.appendChild(li);
+          });
+          searchResults.classList.remove("d-none");
+        } else {
+          searchResults.classList.add("d-none");
+        }
+      });
+    </script>
   </body>
 </html>

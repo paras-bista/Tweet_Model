@@ -1,10 +1,22 @@
 {% extends "layout.html" %}
 
-{% block tittle %}
-Chai aur tweet
+{% block title %}
+Chai aur Tweet
 {% endblock %}
 
-
 {% block content %}
-<h1 class="text-center  mt-4">Welcome to Tweet Django project</h1>
+<div class="container mt-5 text-center">
+  {% if user.is_authenticated %}
+    <h2 class="fw-bold mb-3">Welcome back, {{ user.username }} 👋</h2>
+    <p class="text-muted mb-4">See what people are talking about today!</p>
+    <a href="{% url 'tweet_home' %}" class="btn btn-primary px-4 py-2">Go to Tweet Feed</a>
+  {% else %}
+    <h1 class="fw-bold mb-3">Welcome to <span class="text-primary">Tweet Django</span> 🐦</h1>
+    <p class="text-muted mb-4">Join the conversation and share your thoughts with the world.</p>
+    <div class="d-flex justify-content-center gap-3">
+      <a href="{% url 'login' %}" class="btn btn-outline-light px-4 py-2">Login</a>
+      <a href="{% url 'register' %}" class="btn btn-primary px-4 py-2">Register</a>
+    </div>
+  {% endif %}
+</div>
 {% endblock %}
