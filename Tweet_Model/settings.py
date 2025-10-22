@@ -108,9 +108,12 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # -----------------------------
 # Media files (uploaded images)
 # -----------------------------
-# For Render, use Persistent Disk at /mnt/media
+# Use Persistent Disk on Render at /mnt/media
+if os.environ.get("RENDER"):
+    MEDIA_ROOT = Path("/mnt/media")  # Render
+else:
+    MEDIA_ROOT = BASE_DIR / "media"  # Local dev
 MEDIA_URL = "/media/"
-MEDIA_ROOT = Path("/mnt/media")  # Mount your persistent disk here
 
 # -----------------------------
 # Security settings for HTTPS
