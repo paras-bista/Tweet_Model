@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: tweet-model
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn Tweet_Model.wsgi:application"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: Tweet_Model.settings
+      - key: PYTHON_VERSION
+        value: 3.11.9
