@@ -11,11 +11,8 @@ SECRET_KEY = os.environ.get(
 )
 DEBUG = os.environ.get("RENDER", None) is None  # Debug off on Render
 
-ALLOWED_HOSTS = [
-    "your-app-name.onrender.com",  # Replace with your Render app domain
-    "localhost",
-    "127.0.0.1",
-]
+ALLOWED_HOSTS = ["tweet-model.onrender.com", "127.0.0.1", "localhost"]
+
 
 # Applications
 INSTALLED_APPS = [
