@@ -5,8 +5,15 @@ import dj_database_url  # For Render-friendly database URL
 # -----------------------------
 # Base directories
 # -----------------------------
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Render persistent media
+if os.environ.get("RENDER"):
+    MEDIA_ROOT = Path("/mnt/media")
+else:
+    MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "/media/"
 # -----------------------------
 # Security
 # -----------------------------
@@ -109,11 +116,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # Media files (uploaded images)
 # -----------------------------
 # Use Persistent Disk on Render at /mnt/media
-if os.environ.get("RENDER"):
-    MEDIA_ROOT = Path("/mnt/media")  # Render
-else:
-    MEDIA_ROOT = BASE_DIR / "media"  # Local dev
-MEDIA_URL = "/media/"
+
 
 # -----------------------------
 # Security settings for HTTPS

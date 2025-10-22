@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
-# Exit immediately if a command fails
 set -o errexit
 
-# On Linux (Render), ensure persistent media folder exists
+# Ensure persistent media folder exists on Render
 mkdir -p /mnt/media
 
-# Upgrade pip and install dependencies
+# Upgrade pip & install dependencies
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 
